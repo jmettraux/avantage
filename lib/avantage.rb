@@ -62,7 +62,30 @@ module Avantage
 
       # TECHNICAL INDICATORS
 
-      # TODO
+      SMA: [ nil, %w[ symbol interval time_period series_type ] ],
+      EMA: [ nil, %w[ symbol interval time_period series_type ] ],
+      WMA: [ nil, %w[ symbol interval time_period series_type ] ],
+      DEMA: [ nil, %w[ symbol interval time_period series_type ] ],
+      TEMA: [ nil, %w[ symbol interval time_period series_type ] ],
+      TRIMA: [ nil, %w[ symbol interval time_period series_type ] ],
+      KAMA: [ nil, %w[ symbol interval time_period series_type ] ],
+      MAMA: [ nil, %w[ symbol interval time_period series_type ] ],
+      VWAP: [ nil, %w[ symbol interval ] ],
+      T3: [ nil, %w[ symbol interval time_period series_type ] ],
+      MACD: [ nil, %w[ symbol interval series_type ] ],
+      MACDEXT: [ nil, %w[ symbol interval series_type ] ],
+      STOCH: [ nil, %w[ symbol interval ] ],
+      STOCHF: [ nil, %w[ symbol interval ] ],
+      RSI: [ nil, %w[ symbol interval time_period series_type ] ],
+      STOCHRSI: [ nil, %w[ symbol interval time_period series_type ] ],
+      WILLR: [ nil, %w[ symbol interval time_period ] ],
+      ADX: [ nil, %w[ symbol interval time_period ] ],
+      ADXR: [ nil, %w[ symbol interval time_period ] ],
+      PPO: [ nil, %w[ symbol interval series_type ] ],
+      MOM: [ nil, %w[ symbol interval time_period series_type ] ],
+      BOP: [ nil, %w[ symbol interval ] ],
+      CCI: [ nil, %w[ symbol interval time_period ] ],
+      # ... TODO
 
       # SECTOR PERFORMANCES
 
