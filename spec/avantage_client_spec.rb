@@ -25,9 +25,42 @@ describe Avantage::Client do
         ArgumentError,
         'required parameter :symbol is missing from {}')
     end
+
+    it 'returns a quote for the given symbol' do
+
+      r = @client.quote(symbol: 'AAPL')
+
+      expect(r['Global Quote']['01. symbol']).to eq('AAPL')
+    end
+  end
+
+  describe '#symbol_search' do
+
+    it 'returns symbol search results' do
+
+      r = @client.symbol_search(keywords: 'xiaomi')
+
+      expect(r.class).to eq(Hash)
+      expect(r['bestMatches'].class).to eq(Array)
+      expect(r['bestMatches'].size).to be > 1
+      expect(r['bestMatches'][0]['2. name']).to eq('Xiaomi Corporation')
+      expect(r['bestMatches'][0]['3. type']).to eq('Equity')
+    end
   end
 
   describe '#search' do
+
+    it 'returns symbol search results' do
+
+      #r = @client.search(keywords: 'xiaomi')
+      r = @client.search('xiaomi')
+
+      expect(r.class).to eq(Hash)
+      expect(r['bestMatches'].class).to eq(Array)
+      expect(r['bestMatches'].size).to be > 1
+      expect(r['bestMatches'][0]['2. name']).to eq('Xiaomi Corporation')
+      expect(r['bestMatches'][0]['3. type']).to eq('Equity')
+    end
   end
 
   describe '#sectors' do
