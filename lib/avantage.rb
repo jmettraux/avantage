@@ -33,6 +33,8 @@ module Avantage
     end
 
     {
+      # STOCK TIME SERIES
+
       TIME_SERIES_INTRADAY: [ nil, %w[ symbol interval ] ],
       TIME_SERIES_DAILY: [ nil, %w[ symbol ] ],
       TIME_SERIES_DAILY_ADJUSTED: [ nil, %w[ symbol ] ],
@@ -42,29 +44,30 @@ module Avantage
       TIME_SERIES_MONTHLY_ADJUSTED: [ nil, %w[ symbol ] ],
       GLOBAL_QUOTE: [ :quote, %w[ symbol ] ],
       SYMBOL_SEARCH: [ :search, %w[ keywords ] ],
-    }.each { |k, v| add_endpoint(k, *v) }
 
-    {
+      # FOREX
+
       CURRENCY_EXCHANGE_RATE: [ :fx, %w[ from_currency to_currency ] ],
       FX_INTRADAY: [ nil, %w[ from_symbol to_symbol interval ] ],
       FX_DAILY: [ nil, %w[ from_symbol to_symbol ] ],
       FX_WEEKLY: [ nil, %w[ from_symbol to_symbol ] ],
       FX_MONTHLY: [ nil, %w[ from_symbol to_symbol ] ],
-    }.each { |k, v| add_endpoint(k, *v) }
 
-    {
+      # CRYPTOCURRENCIES
+
       #CURRENCY_EXCHANGE_RATE: [ nil, %w[ from_currency to_currency ] ],
       DIGITAL_CURRENCY_DAILY: [ nil, %w[ symbol market ] ],
       DIGITAL_CURRENCY_WEEKLY: [ nil, %w[ symbol market ] ],
       DIGITAL_CURRENCY_MONTHLY: [ nil, %w[ symbol market ] ],
-    }.each { |k, v| add_endpoint(k, *v) }
 
-    {
-      # TODO Technical Indicators
-    }.each { |k, v| add_endpoint(k, *v) }
+      # TECHNICAL INDICATORS
 
-    {
+      # TODO
+
+      # SECTOR PERFORMANCES
+
       SECTOR: [ :sectors, %w[] ],
+
     }.each { |k, v| add_endpoint(k, *v) }
 
     protected
