@@ -74,8 +74,14 @@ module Avantage
 
     def get(key, required_parameters, opts)
 
-#p [ key, required_parameters, opts ]
-#TODO check required parameters
+      required_parameters.each do |rp|
+
+        rpsy = rp.to_sym
+
+        fail ArgumentError.new(
+          "required parameter #{rpsy.inspect} is missing from #{opts.inspect}"
+        ) unless opts.has_key?(rp) || opts.has_key?(rpsy)
+      end
 
       os = opts.merge(function: key, apikey: @api_key)
 

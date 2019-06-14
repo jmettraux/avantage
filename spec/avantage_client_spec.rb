@@ -16,6 +16,15 @@ describe Avantage::Client do
   end
 
   describe '#quote' do
+
+    it 'fails if "symbol" or :symbol is missing' do
+
+      expect {
+        @client.quote
+      }.to raise_error(
+        ArgumentError,
+        'required parameter :symbol is missing from {}')
+    end
   end
 
   describe '#search' do
