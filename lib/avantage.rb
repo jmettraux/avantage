@@ -21,10 +21,10 @@ module Avantage
 
       k = key.downcase
 
-      define_method(k) { |opts={}|
-        get(key, required_parameters, opts) }
-      define_method("#{k}_csv") { |opts={}|
-        get(key, required_parameters, opts.merge!(dataType: 'csv')) } if csv
+      define_method(k) { |a=nil, opts={}|
+        get(key, required_parameters, a, opts) }
+      define_method("#{k}_csv") { |a=nil, opts={}|
+        get(key, required_parameters, a, opts.merge!(dataType: 'csv')) } if csv
 
       if aliaz
         alias_method(aliaz, k)
@@ -72,7 +72,13 @@ module Avantage
 
     protected
 
-    def get(key, required_parameters, opts)
+    def get(key, required_parameters, a, opts)
+
+      if a.is_a?(Hash)
+        opts = a
+      elsif required_parameters.any? && a != nil
+        opts.merge!(required_parameters.first => a)
+      end
 
       required_parameters.each do |rp|
 
