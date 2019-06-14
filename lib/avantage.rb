@@ -97,20 +97,7 @@ module Avantage
 
     def get(key, required_parameters, a, opts)
 
-      if a.is_a?(Hash)
-        opts = a
-      elsif required_parameters.any? && a != nil
-        opts.merge!(required_parameters.first => a)
-      end
-
-      required_parameters.each do |rp|
-
-        rpsy = rp.to_sym
-
-        fail ArgumentError.new(
-          "required parameter #{rpsy.inspect} is missing from #{opts.inspect}"
-        ) unless opts.has_key?(rp) || opts.has_key?(rpsy)
-      end
+      opts = prepare_options(key, required_parameters, a, opts)
 
       os = opts.merge(function: key, apikey: @api_key)
 
@@ -144,6 +131,26 @@ module Avantage
       r._elapsed = monow - t0
 
       r
+    end
+
+    def prepare_options(key, required_parameters, a, opts)
+
+      if a.is_a?(Hash)
+        opts = a
+      elsif required_parameters.any? && a != nil
+        opts.merge!(required_parameters.first => a)
+      end
+
+      required_parameters.each do |rp|
+
+        rpsy = rp.to_sym
+
+        fail ArgumentError.new(
+          "required parameter #{rpsy.inspect} is missing from #{opts.inspect}"
+        ) unless opts.has_key?(rp) || opts.has_key?(rpsy)
+      end
+
+      opts
     end
 
     def monow; Process.clock_gettime(Process::CLOCK_MONOTONIC); end
