@@ -133,6 +133,8 @@ module Avantage
       r
     end
 
+    VS_INTERVALS = %w[ 1min 5min 15min 30min 60min daily weekly monthly ]
+
     def prepare_options(key, required_parameters, a, opts)
 
       if a.is_a?(Hash)
