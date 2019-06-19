@@ -17,91 +17,41 @@ module Avantage
       @api_key = api_key
     end
 
-    def self.add_endpoint(key, aliaz, required_parameters, csv=true)
+    def global_quote(symbol)
 
-      k = key.downcase
+      os = symbol.is_a?(Hash) ? symbol : { symbol: symbol }
 
-      define_method(k) { |a=nil, opts={}|
-        get(key, required_parameters, a, opts) }
-      define_method("#{k}_csv") { |a=nil, opts={}|
-        get(key, required_parameters, a, opts.merge!(dataType: 'csv')) } if csv
-
-      if aliaz
-        alias_method(aliaz, k)
-        alias_method("#{aliaz}_csv", "#{k}_csv") if csv
-      end
+      get('GLOBAL_QUOTE', os)
     end
+    alias quote global_quote
 
-    {
-      # STOCK TIME SERIES
+    def symbol_search(keywords)
 
-      TIME_SERIES_INTRADAY: [ nil, %w[ symbol interval ] ],
-      TIME_SERIES_DAILY: [ nil, %w[ symbol ] ],
-      TIME_SERIES_DAILY_ADJUSTED: [ nil, %w[ symbol ] ],
-      TIME_SERIES_WEEKLY: [ nil, %w[ symbol ] ],
-      TIME_SERIES_WEEKLY_ADJUSTED: [ nil, %w[ symbol ] ],
-      TIME_SERIES_MONTHLY: [ nil, %w[ symbol ] ],
-      TIME_SERIES_MONTHLY_ADJUSTED: [ nil, %w[ symbol ] ],
-      GLOBAL_QUOTE: [ :quote, %w[ symbol ] ],
-      SYMBOL_SEARCH: [ :search, %w[ keywords ] ],
+      os = keywords.is_a?(Hash) ? keywords : { keywords: keywords }
 
-      # FOREX
+      get('SYMBOL_SEARCH', os)
+    end
+    alias search symbol_search
 
-      CURRENCY_EXCHANGE_RATE: [ :fx, %w[ from_currency to_currency ] ],
-      FX_INTRADAY: [ nil, %w[ from_symbol to_symbol interval ] ],
-      FX_DAILY: [ nil, %w[ from_symbol to_symbol ] ],
-      FX_WEEKLY: [ nil, %w[ from_symbol to_symbol ] ],
-      FX_MONTHLY: [ nil, %w[ from_symbol to_symbol ] ],
+    def sector(os={})
 
-      # CRYPTOCURRENCIES
+      get('SECTOR', os)
+    end
+    alias sectors sector
 
-      #CURRENCY_EXCHANGE_RATE: [ nil, %w[ from_currency to_currency ] ],
-      DIGITAL_CURRENCY_DAILY: [ nil, %w[ symbol market ] ],
-      DIGITAL_CURRENCY_WEEKLY: [ nil, %w[ symbol market ] ],
-      DIGITAL_CURRENCY_MONTHLY: [ nil, %w[ symbol market ] ],
+    def currency_exchange_rate(from, to)
 
-      # TECHNICAL INDICATORS
+      get('CURRENCY_EXCHANGE_RATE', from_currency: from, to_currency: to)
+    end
+    alias exchange_rate currency_exchange_rate
+    alias forex currency_exchange_rate
 
-      SMA: [ nil, %w[ symbol interval time_period series_type ] ],
-      EMA: [ nil, %w[ symbol interval time_period series_type ] ],
-      WMA: [ nil, %w[ symbol interval time_period series_type ] ],
-      DEMA: [ nil, %w[ symbol interval time_period series_type ] ],
-      TEMA: [ nil, %w[ symbol interval time_period series_type ] ],
-      TRIMA: [ nil, %w[ symbol interval time_period series_type ] ],
-      KAMA: [ nil, %w[ symbol interval time_period series_type ] ],
-      MAMA: [ nil, %w[ symbol interval time_period series_type ] ],
-      VWAP: [ nil, %w[ symbol interval ] ],
-      T3: [ nil, %w[ symbol interval time_period series_type ] ],
-      MACD: [ nil, %w[ symbol interval series_type ] ],
-      MACDEXT: [ nil, %w[ symbol interval series_type ] ],
-      STOCH: [ nil, %w[ symbol interval ] ],
-      STOCHF: [ nil, %w[ symbol interval ] ],
-      RSI: [ nil, %w[ symbol interval time_period series_type ] ],
-      STOCHRSI: [ nil, %w[ symbol interval time_period series_type ] ],
-      WILLR: [ nil, %w[ symbol interval time_period ] ],
-      ADX: [ nil, %w[ symbol interval time_period ] ],
-      ADXR: [ nil, %w[ symbol interval time_period ] ],
-      PPO: [ nil, %w[ symbol interval series_type ] ],
-      MOM: [ nil, %w[ symbol interval time_period series_type ] ],
-      BOP: [ nil, %w[ symbol interval ] ],
-      CCI: [ nil, %w[ symbol interval time_period ] ],
-      # ... TODO
+    def get(function, parameters)
 
-      # SECTOR PERFORMANCES
+      func = function.to_s.upcase
+      params = parameters.merge(function: func, apikey: @api_key)
 
-      SECTOR: [ :sectors, %w[] ],
-
-    }.each { |k, v| add_endpoint(k, *v) }
-
-    protected
-
-    def get(key, required_parameters, a, opts)
-
-      opts = prepare_options(key, required_parameters, a, opts)
-
-      os = opts.merge(function: key, apikey: @api_key)
-
-      uri = API_ROOT_URI + URI.encode_www_form(os)
+      uri = API_ROOT_URI + URI.encode_www_form(params)
 
       req = Net::HTTP::Get.new(uri)
       req.instance_eval { @header.clear }
@@ -133,27 +83,7 @@ module Avantage
       r
     end
 
-    VS_INTERVALS = %w[ 1min 5min 15min 30min 60min daily weekly monthly ]
-
-    def prepare_options(key, required_parameters, a, opts)
-
-      if a.is_a?(Hash)
-        opts = a
-      elsif required_parameters.any? && a != nil
-        opts.merge!(required_parameters.first => a)
-      end
-
-      required_parameters.each do |rp|
-
-        rpsy = rp.to_sym
-
-        fail ArgumentError.new(
-          "required parameter #{rpsy.inspect} is missing from #{opts.inspect}"
-        ) unless opts.has_key?(rp) || opts.has_key?(rpsy)
-      end
-
-      opts
-    end
+    protected
 
     def monow; Process.clock_gettime(Process::CLOCK_MONOTONIC); end
   end

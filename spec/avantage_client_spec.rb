@@ -23,7 +23,8 @@ describe Avantage::Client do
         @client.quote
       }.to raise_error(
         ArgumentError,
-        'required parameter :symbol is missing from {}')
+        'wrong number of arguments (given 0, expected 1)'
+      )
     end
 
     it 'returns a quote for the given symbol' do
