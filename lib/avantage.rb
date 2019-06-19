@@ -39,9 +39,24 @@ module Avantage
     end
     alias sectors sector
 
-    def currency_exchange_rate(from, to)
+    def currency_exchange_rate(from, to=nil)
 
-      get('CURRENCY_EXCHANGE_RATE', from_currency: from, to_currency: to)
+      os =
+        if from.is_a?(Hash)
+          from.inject({}) { |k, v|
+            if k == :from
+              h[:from_currency] = v
+            elsif k == :to
+              h[:to_currency] = v
+            else
+              h[k] = v
+            end
+            h }
+        else
+          { from_currency: from, to_currency: to }
+        end
+
+      get('CURRENCY_EXCHANGE_RATE', os)
     end
     alias exchange_rate currency_exchange_rate
     alias forex currency_exchange_rate
