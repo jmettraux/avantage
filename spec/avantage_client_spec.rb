@@ -15,6 +15,17 @@ describe Avantage::Client do
     @client = Avantage::Client.new(File.read('.api.key').strip)
   end
 
+  describe '#get' do
+
+    it 'queries for CSV if `csv: true`' do
+
+      csv = @client.get(:global_quote, symbol: 'AAPL', csv: true)
+
+      expect(csv).to match(/\bsymbol,open,high,low,price\b/)
+      expect(csv).to match(/\bAAPL\b/)
+    end
+  end
+
   describe '#quote' do
 
     it 'fails if "symbol" or :symbol is missing' do

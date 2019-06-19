@@ -64,7 +64,10 @@ module Avantage
     def get(function, parameters)
 
       func = function.to_s.upcase
+
       params = parameters.merge(function: func, apikey: @api_key)
+      params[:datatype] = 'json' if params.delete(:json)
+      params[:datatype] = 'csv' if params.delete(:csv)
 
       uri = API_ROOT_URI + URI.encode_www_form(params)
 
