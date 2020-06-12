@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'pp'
+require_relative '../lib/avantage.rb'
+
+
+pp Avantage::Client.new(File.read('.api.key').strip)
+  .sector
+
