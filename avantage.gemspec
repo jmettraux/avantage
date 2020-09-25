@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.authors = [ 'John Mettraux' ]
   s.email = [ 'jmettraux@gmail.com' ]
-  s.homepage = 'http://github.com/jmettraux/avantage'
+  s.homepage = 'https://github.com/jmettraux/avantage'
   s.license = 'MIT'
   s.summary = 'A Ruby client to the Alpha Vantage API'
 
